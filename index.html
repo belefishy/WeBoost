@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeBoost | National Scale & Performance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #CCFF00;
+            --deep-black: #000000;
+            --nav-gray: #f2f2f2; 
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            color: var(--deep-black);
+            scroll-behavior: smooth;
+        }
+
+        .conthion { 
+            font-family: 'Arial Black', 'Inter', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 0.8;
+        }
+
+        .subtle {
+            font-family: 'Times New Roman', Times, serif;
+            text-transform: uppercase;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+            padding: 0 4px;
+            color: inherit;
+            font-size: 0.9em;
+        }
+
+        .text-neon { color: var(--neon-green); }
+        .bg-neon { background-color: var(--neon-green); }
+
+        .grid-pattern {
+            background-image: radial-gradient(circle, #000 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.03;
+        }
+
+        .btn-premium {
+            background-color: var(--deep-black);
+            color: white;
+            font-weight: 800;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid var(--deep-black);
+        }
+
+        .btn-premium:hover {
+            background-color: var(--neon-green);
+            color: var(--deep-black);
+            border-color: var(--neon-green);
+        }
+
+        .page-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .page-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .ai-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            background: #f0f0f0;
+        }
+
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            background: var(--deep-black);
+            color: white;
+            padding: 10px 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-green);
+            border-top-color: black;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1) contrast(1.2) brightness(0.9);
+            opacity: 0.12;
+            z-index: -1;
+        }
+
+        /* BARRA DE NAVEGACIÓN ESTILO PÍLDORA */
+        .nav-pill {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 10px 32px; 
+            border-radius: 100px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pill button {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-pill button:after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--neon-green);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-pill button:hover:after {
+            width: 100%;
+        }
+
+        .price-card {
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .price-card:hover {
+            border-color: var(--neon-green);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-card {
+            border-left: 4px solid var(--neon-green);
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Header & Navegación Principal -->
+    <nav class="fixed w-full z-[100] px-8 py-6 flex justify-between items-center bg-[#f2f2f2]/90 backdrop-blur-md border-b border-black/5">
+        <div class="text-2xl conthion tracking-tighter cursor-pointer select-none min-w-[150px]" onclick="showView('home')">
+            WE<span class="text-neon">BOOST</span>
+        </div>
+        
+        <!-- PÍLDORA CENTRAL CON 5 SECCIONES -->
+        <div class="hidden lg:flex nav-pill text-[10px] font-black uppercase tracking-[0.18em]">
+            <button onclick="scrollToSection('home')" class="hover:text-black text-zinc-500">Performance</button>
+            <button onclick="scrollToSection('about')" class="hover:text-black text-zinc-500">Ecosistema</button>
+            <button onclick="scrollToSection('services')" class="hover:text-black text-zinc-500">Arsenal</button>
+            <button onclick="showView('testimonials')" class="hover:text-black text-zinc-500">Éxito</button>
+            <button onclick="scrollToSection('pricing')" class="hover:text-black text-zinc-500">Inversión</button>
+        </div>
+
+        <div class="min-w-[150px] flex justify-end">
+            <button onclick="openAuditForm('Pack Full Scale (900€)')" class="bg-black text-white px-7 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-neon hover:text-black transition-all">
+                Auditoría
+            </button>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO: VISTA PRINCIPAL -->
+    <main id="home-view" class="page-view active">
+        <section id="home" class="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 overflow-hidden">
+            <img id="hero-background" src="" alt="[Fondo de ciudad moderna y tecnología]">
+            <div id="hero-bg-loader" class="loading-overlay opacity-0 pointer-events-none"><div class="spinner"></div></div>
+            
+            <div class="absolute inset-0 grid-pattern -z-10"></div>
+            
+            <div class="max-w-6xl w-full px-6 text-center z-10">
+                <h1 class="text-6xl md:text-[120px] conthion mb-6 leading-[0.82]">
+                    ESCALAMOS <span class="subtle">TU</span> MARCA <br>
+                    A <span class="text-neon">NIVEL</span> <span class="subtle">NACIONAL</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl font-light text-zinc-600 max-w-2xl mx-auto mb-14 leading-relaxed">
+                    Estrategias de Paid Ads & Performance Web sin barreras. <br>
+                    Dominamos el mercado <span class="subtle text-black font-bold">ESPAÑOL</span> con ROI real.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-10">
+                    <button onclick="openAuditForm()" class="btn-premium px-14 py-6 text-[12px] uppercase tracking-[0.25em]">Escalar Negocio</button>
+                    <button onclick="scrollToSection('services')" class="text-[12px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:text-neon hover:border-neon transition-all">Ver Arsenal</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARQUESINA DE VALORES -->
+        <div class="marquee border-y border-black/5">
+            <div class="marquee-content conthion text-2xl">
+                NATIONAL SCALE • WEBOOST • <span class="subtle">BY</span> PERFORMANCE • NO LIMITS • <span class="text-neon">ROI</span> FOCUS • PAID ADS • WEB DESIGN • NATIONAL SCALE • WEBOOST •
+            </div>
+        </div>
+
+        <!-- SECCIÓN: ECOSISTEMA (ABOUT) -->
+        <section id="about" class="py-24 px-6 bg-white">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+                <div class="ai-image-wrapper w-full h-[500px] shadow-2xl relative">
+                    <div id="about-loader" class="loading-overlay"><div class="spinner"></div></div>
+                    <img id="about-img" src="" alt="[Imagen de crecimiento corporativo y datos]" class="w-full h-full object-cover absolute inset-0 opacity-0 transition-opacity duration-1000">
+                </div>
+                <div>
+                    <h2 class="conthion text-7xl mb-8">
+                        CRECIMIENTO <span class="subtle">SIN</span> <br> <span class="text-neon">LIMITES</span>.
+                    </h2>
+                    <p class="text-zinc-500 text-lg mb-10 leading-relaxed font-light">
+                        Diseñamos infraestructuras de venta digitales preparadas para absorber demanda masiva. No solo atraemos tráfico; construimos activos que generan riqueza constante.
+                    </p>
+                    <div class="grid grid-cols-2 gap-8 border-t border-black/10 pt-8">
+                        <div class="group cursor-default">
+                            <div class="conthion text-5xl mb-1 group-hover:text-neon transition-colors">100%</div>
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Escalabilidad</div>
+                        </div>
+                        <div class="group cursor-default">
+                            <div class="conthion text-5xl mb-1 group-hover:text-neon transition-colors">DATA</div>
+                            <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Driven Growth</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: ARSENAL (SERVICES) -->
+        <section id="services" class="py-24 px-6 bg-black text-white">
+            <div class="max-w-7xl mx-auto text-center mb-20">
+                <h2 class="conthion text-7xl md:text-9xl text-neon">ARSENAL BOOST</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-16">
+                <div class="space-y-6 group cursor-pointer" onclick="openAuditForm('Paid Ads Elite (150€)')">
+                    <div class="conthion text-6xl opacity-10 group-hover:opacity-100 group-hover:text-neon transition-all">01</div>
+                    <h4 class="conthion text-4xl">PAID <span class="subtle text-white/50 group-hover:text-white transition-colors">PERFORMANCE</span></h4>
+                    <p class="text-zinc-500 text-base font-light">Meta, Google y TikTok Ads configurados con precisión quirúrgica.</p>
+                </div>
+                <div class="space-y-6 group cursor-pointer" onclick="openAuditForm('Creación / Mejora Web (700€)')">
+                    <div class="conthion text-6xl opacity-10 group-hover:opacity-100 group-hover:text-neon transition-all">02</div>
+                    <h4 class="conthion text-4xl">CONVERSION <span class="subtle text-white/50 group-hover:text-white transition-colors">SYSTEMS</span></h4>
+                    <p class="text-zinc-500 text-base font-light">Webs de ultra-velocidad optimizadas para el cierre de ventas.</p>
+                </div>
+                <div class="space-y-6 group cursor-pointer" onclick="openAuditForm('Pack Full Scale (900€)')">
+                    <div class="conthion text-6xl opacity-10 group-hover:opacity-100 group-hover:text-neon transition-all">03</div>
+                    <h4 class="conthion text-4xl">TOTAL <span class="subtle text-white/50 group-hover:text-white transition-colors">BOOST</span></h4>
+                    <p class="text-zinc-500 text-base font-light">Sincronía total entre captación y conversión para el escalado.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: INVERSIÓN (PRICING) -->
+        <section id="pricing" class="py-24 px-6 bg-zinc-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="conthion text-7xl mb-4">INVERSIÓN <span class="subtle">DE</span> ESCALA</h2>
+                    <p class="text-zinc-400 uppercase tracking-widest text-[11px] font-black">Precios transparentes para resultados nacionales.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10">
+                    <div onclick="openAuditForm('Paid Ads Elite (150€)')" class="price-card bg-white p-12 flex flex-col items-center text-center">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Solo Publicidad</span>
+                        <h3 class="conthion text-4xl mb-4">ADS <span class="subtle">FLOW</span></h3>
+                        <div class="text-6xl conthion mb-8">150<span class="text-xl">€</span></div>
+                        <ul class="text-sm text-zinc-500 space-y-4 mb-10 flex-grow">
+                            <li>Gestión Nacional Ads</li>
+                            <li>Segmentación Predictiva</li>
+                            <li>Reporting de Atribución</li>
+                        </ul>
+                        <button class="w-full py-5 border border-black conthion text-[12px] pointer-events-none">ELEGIR PLAN</button>
+                    </div>
+                    <div onclick="openAuditForm('Creación / Mejora Web (700€)')" class="price-card bg-white p-12 flex flex-col items-center text-center">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-6">Solo Web</span>
+                        <h3 class="conthion text-4xl mb-4">WEB <span class="subtle">ENGINE</span></h3>
+                        <div class="text-6xl conthion mb-8">700<span class="text-xl">€</span></div>
+                        <ul class="text-sm text-zinc-500 space-y-4 mb-10 flex-grow">
+                            <li>Landing de Alto Tráfico</li>
+                            <li>Optimización de Velocidad</li>
+                            <li>Diseño Centrado en Venta</li>
+                        </ul>
+                        <button class="w-full py-5 border border-black conthion text-[12px] pointer-events-none">ELEGIR PLAN</button>
+                    </div>
+                    <div onclick="openAuditForm('Pack Full Scale (900€)')" class="price-card bg-black text-white p-12 flex flex-col items-center text-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-neon text-black px-8 py-2 text-[9px] font-black uppercase tracking-tighter transform rotate-45 translate-x-12 translate-y-5">OFERTA 10%</div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-6">National Growth</span>
+                        <h3 class="conthion text-4xl mb-3">FULL <span class="subtle text-white/50">BOOST</span></h3>
+                        <div class="flex items-baseline gap-3 mb-8">
+                            <span class="text-zinc-500 line-through text-2xl conthion">1000€</span>
+                            <div class="text-6xl conthion text-neon">900<span class="text-xl text-white">€</span></div>
+                        </div>
+                        <ul class="text-sm text-zinc-400 space-y-4 mb-10 flex-grow">
+                            <li>Control Total de Campañas</li>
+                            <li>Ecosistema Web Integrado</li>
+                            <li>Soporte Prioritario</li>
+                        </ul>
+                        <button class="w-full py-5 bg-neon text-black conthion text-[12px] pointer-events-none">BOOST NOW</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SECCIÓN: ÉXITO (TESTIMONIALS) -->
+    <main id="testimonials-view" class="page-view pt-32 bg-white min-h-screen">
+        <section class="py-24 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-24">
+                    <button onclick="showView('home')" class="group flex items-center mx-auto text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-black mb-10 transition-all">
+                        <span class="mr-3 transform group-hover:-translate-x-2 transition-transform">←</span> Inicio
+                    </button>
+                    <h2 class="conthion text-7xl md:text-[140px] mb-6">CASOS <span class="subtle text-black/20">DE</span> <span class="text-neon">ÉXITO</span></h2>
+                    <p class="text-zinc-400 uppercase tracking-widest text-[11px] font-black">Historias reales de escalado masivo.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <div class="testimonial-card p-12 shadow-sm hover:shadow-2xl transition-all">
+                        <div class="conthion text-neon text-6xl mb-8">"X4 ROI"</div>
+                        <p class="text-zinc-600 italic mb-10 font-light text-lg leading-relaxed">
+                            "Pasamos de una presencia local estancada a liderar ventas en Madrid y Barcelona en tiempo récord. La infraestructura es una máquina de vender."
+                        </p>
+                        <div class="border-t border-black/5 pt-8">
+                            <div class="conthion text-2xl">Carlos M.</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-zinc-400">CEO @ Nexa Logística</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card p-12 shadow-sm hover:shadow-2xl transition-all">
+                        <div class="conthion text-neon text-6xl mb-8">"ESCALA"</div>
+                        <p class="text-zinc-600 italic mb-10 font-light text-lg leading-relaxed">
+                            "WeBoost es el partner que necesitábamos. Su capacidad para optimizar el coste por adquisición nacional en Meta es sencillamente imbatible."
+                        </p>
+                        <div class="border-t border-black/5 pt-8">
+                            <div class="conthion text-2xl">Elena R.</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Marketing @ Aura Beauty</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card p-12 shadow-sm hover:shadow-2xl transition-all">
+                        <div class="conthion text-neon text-6xl mb-8">"DOMINIO"</div>
+                        <p class="text-zinc-600 italic mb-10 font-light text-lg leading-relaxed">
+                            "El pack Full Boost cambió nuestra empresa. Web rápida y campañas que no dejan de traer leads cualificados diariamente."
+                        </p>
+                        <div class="border-t border-black/5 pt-8">
+                            <div class="conthion text-2xl">Jorge S.</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Founder @ TechGear ES</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-32 text-center">
+                    <button onclick="openAuditForm()" class="btn-premium px-20 py-8 text-[14px] uppercase tracking-[0.3em]">Únete al 1%</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SECCIÓN: AUDITORÍA (AUDIT) -->
+    <main id="audit-view" class="page-view pt-32 pb-16 bg-white min-h-screen">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <button onclick="showView('home')" class="group flex items-center mx-auto text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-black mb-10 transition-all">
+                    <span class="mr-3 transform group-hover:-translate-x-2 transition-transform">←</span> Volver
+                </button>
+                <h2 class="conthion text-7xl md:text-9xl mb-6">TU <span class="subtle">PLAN</span></h2>
+                <p class="text-zinc-500 text-sm font-bold uppercase tracking-widest">Análisis detallado de tu negocio</p>
+            </div>
+            <div class="bg-zinc-50 p-10 md:p-16 rounded-sm border border-black/5 shadow-2xl">
+                <form id="contactForm" class="space-y-10">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-zinc-700 block">Tu Nombre</label>
+                            <input type="text" required class="w-full bg-transparent border-b-2 border-black/20 p-3 focus:outline-none focus:border-black transition-all font-bold text-xl text-black">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-zinc-700 block">Tu Marca</label>
+                            <input type="text" required class="w-full bg-transparent border-b-2 border-black/20 p-3 focus:outline-none focus:border-black transition-all font-bold text-xl text-black">
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-700 block">Plan de Interés</label>
+                        <select id="serviceSelector" class="w-full bg-transparent border-b-2 border-black/20 p-3 focus:outline-none focus:border-black transition-all font-bold text-xl text-black appearance-none cursor-pointer">
+                            <option value="Paid Ads Elite (150€)">Ads Only Plan (150€)</option>
+                            <option value="Creación / Mejora Web (700€)">Web Craft Plan (700€)</option>
+                            <option value="Pack Full Scale (900€)">Full Boost Combo (900€ - 10% OFF)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-black text-white conthion text-2xl py-8 hover:bg-neon hover:text-black transition-all shadow-xl mt-6">
+                        ENVIAR <span class="subtle text-white/70">SOLICITUD</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-16 bg-white border-t border-black/5">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="conthion text-2xl tracking-tighter cursor-pointer" onclick="showView('home')">WE<span class="text-neon">BOOST</span></div>
+            <div class="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">©2024 • NATIONAL PERFORMANCE STUDIO • MADRID / BARCELONA</div>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = ""; 
+
+        // Lógica de navegación SPA
+        function showView(viewId) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+            const targetView = document.getElementById(viewId + '-view');
+            if (targetView) {
+                targetView.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Scroll suave con cambio de vista si es necesario
+        function scrollToSection(sectionId) {
+            if (!document.getElementById('home-view').classList.contains('active')) {
+                showView('home');
+                setTimeout(() => {
+                    const el = document.getElementById(sectionId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 250);
+            } else {
+                const el = document.getElementById(sectionId);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function openAuditForm(serviceName = 'Pack Full Scale (900€)') {
+            showView('audit');
+            const selector = document.getElementById('serviceSelector');
+            if (selector) selector.value = serviceName;
+        }
+
+        // Motor de generación de imágenes IA
+        async function generateImage(prompt, imgId, loaderId) {
+            const payload = {
+                instances: [{ prompt: prompt }],
+                parameters: { sampleCount: 1 }
+            };
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.predictions && data.predictions[0]) {
+                    const img = document.getElementById(imgId);
+                    img.src = `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
+                    img.onload = () => {
+                        img.classList.remove('opacity-0');
+                        const loader = document.getElementById(loaderId);
+                        if (loader) {
+                            loader.style.opacity = '0';
+                            setTimeout(() => loader.remove(), 500);
+                        }
+                    };
+                }
+            } catch (error) {
+                console.error("AI Image Generation Error:", error);
+                const img = document.getElementById(imgId);
+                if(img) img.classList.remove('opacity-0');
+                const loader = document.getElementById(loaderId);
+                if(loader) loader.remove();
+            }
+        }
+
+        window.onload = () => {
+            generateImage("Cinematic aerial shot of a futuristic urban business district, monochrome photography style, sharp focus, clean architectural lines, high contrast, 8k resolution", "hero-background", "hero-bg-loader");
+            generateImage("Ultra modern data center interior with glowing green lights, abstract technology background, corporate high-end aesthetic, black and white palette, 8k", "about-img", "about-loader");
+        };
+
+        // Formulario de contacto simulado
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'PROCESANDO...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = '¡SOLICITUD ENVIADA!';
+                btn.style.backgroundColor = '#CCFF00';
+                btn.style.color = '#000';
+                setTimeout(() => {
+                    showView('home');
+                    this.reset();
+                    btn.innerHTML = originalText;
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                    btn.disabled = false;
+                }, 2500);
+            }, 1200);
+        });
+    </script>
+</body>
+</html>
